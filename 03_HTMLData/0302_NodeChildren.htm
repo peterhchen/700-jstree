@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<!--    https://www.jstree.com/docs/html/ -->
+<head>
+  <meta charset="utf-8">
+  <title>jsTree test</title>
+  <!-- 2 load the theme CSS file
+  <link rel="stylesheet" href="dist/themes/default/style.min.css" />
+  -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
+</head>
+<body>
+  <!-- 3 setup a container element -->
+  <!--
+  To create a node with chid nodes simply nest an <ul>
+  The internally jstree convert the text to a link. 
+  If there already a link in the markup jstree will not mind.
+  href="#" will not direct the user a a new page.
+  Use changed.jstree event to process.
+  -->
+  <div id="html1">
+    <ul>
+        <li>Root node 1
+          <ul>
+              <li>Child node 1</li>
+              <li><a href="#">Child node2 </a></li>
+          </ul>
+        </li>
+    </ul>
+  </div>
+
+  <!-- 4 include the jQuery library 
+  <script src="dist/libs/jquery.js"></script>
+  -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
+
+  <!-- 5 include the minified jstree source
+  <script src="dist/jstree.min.js"></script>
+  -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+  <script>
+  $(function () {
+    // 6 create an instance when the DOM is ready
+    $('#html1').jstree();
+  });
+  </script>
+</body>
+</html>

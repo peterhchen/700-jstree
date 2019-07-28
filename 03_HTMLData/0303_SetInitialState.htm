@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<!--    https://www.jstree.com/docs/html/ -->
+<head>
+  <meta charset="utf-8">
+  <title>jsTree test</title>
+  <!-- 2 load the theme CSS file
+  <link rel="stylesheet" href="dist/themes/default/style.min.css" />
+  -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
+</head>
+<body>
+  <!-- 3 setup a container element -->
+  <!--
+  To make a node intially selected, you can set the jstree-clicked class on the <a> element.
+  You can set jstree-open class on any <li> element to make it intiallitally extended. 
+  Its children are visible. 
+  It is a good idea to give your nodes unique IDs by adding id attribute to any <li> element.
+  -->
+  <div id="html1">
+    <ul>
+        <li class="jstree-open" id="node_1">Root
+            <ul>
+              <li>
+                <a href="#" class="jstree-clicked">Child</a>
+              </li>
+            </ul>
+        </li>
+    </ul>
+  </div>
+
+  <!-- 4 include the jQuery library 
+  <script src="dist/libs/jquery.js"></script>
+  -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
+
+  <!-- 5 include the minified jstree source
+  <script src="dist/jstree.min.js"></script>
+  -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+  <script>
+  $(function () {
+    // 6 create an instance when the DOM is ready
+    $('#html1').jstree();
+  });
+  </script>
+</body>
+</html>

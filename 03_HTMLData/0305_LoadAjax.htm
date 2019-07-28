@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<!--    https://www.jstree.com/docs/html/ -->
+<head>
+  <meta charset="utf-8">
+  <title>jsTree test</title>
+  <!-- 2 load the theme CSS file
+  <link rel="stylesheet" href="dist/themes/default/style.min.css" />
+  -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
+</head>
+<body>
+  <!-- 3 setup a container element -->
+  <!--
+   You can also use AJAX to populate the tree with HTML your server returns. 
+   The format remains the same as the above, the only difference is that the HTML is not inside the container, 
+   but returned from the server.
+   To take advantage of this option you need to use the $.jstree.defaults.core.data config option.
+   Just use a standard jQuery-like AJAX config and jstree will automatically make an AJAX request populate the 
+   tree with the response.
+   Add a class of jstree-closed to any LI node you return and do not nest an UL node and jstree will make another 
+   AJAX call as soon as the user opens this node.
+   In addition to the standard jQuery ajax options here you can supply functions for data and url, 
+   the functions will be run in the current instance's scope and a param will be passed indicating which node is being loaded, the return value of those functions will be used as URL and data respectively.
+  -->
+  <div id="html1">
+      $('#tree').jstree({
+        'core' : {
+          'data' : {
+            'url' : 'ajax_nodes.html',
+            'data' : function (node) {
+              return { 'id' : node.id };
+            }
+          }
+        }
+      });
+      
+      // Example response:
+      <ul>
+      <li>Node 1</li>
+      <li class="jstree-closed">Node 2</li>
+
+      </ul>
+  </div>
+
+  <!-- 4 include the jQuery library 
+  <script src="dist/libs/jquery.js"></script>
+  -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
+
+  <!-- 5 include the minified jstree source
+  <script src="dist/jstree.min.js"></script>
+  -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+  <script>
+  $(function () {
+    // 6 create an instance when the DOM is ready
+    $('#html1').jstree();
+  });
+  </script>
+</body>
+</html>
