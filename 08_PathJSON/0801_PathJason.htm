@@ -32,7 +32,8 @@
           ]
       } 
     }
-  
+    // Note: The last digit "/" is very important. With "/", it is a folder. Without "/", it is a leaf node.
+    // All the leaf node need the folder to be the parent.
     data = [ 
       "env/child1/env/",
       "env/child1/env/key1",
@@ -89,10 +90,10 @@
           {id: "env/child2/", parent: "env/", text: "env/child2/"},
           {id: "env/child1/key1", parent: "env/child1/", text: "env/child1/key1"},
           {id: "env/child1/key2", parent: "env/child1/", text: "env/child1/key2"},
-          {id: "env/child1/env", parent: "env/child1/", text: "env/child1/env"},
+          {id: "env/child1/env/", parent: "env/child1/", text: "env/child1/env"},
           {id: "env/child2/key1", parent: "env/child2/", text: "env/child2/key1"},
           {id: "env/child2/key2", parent: "env/child2/", text: "env/child2/key2"},
-          //{id: "env/child1/env/key1", parent: "env/child1/env/", text: "env/child1/env/key1"},
+          {id: "env/child1/env/key1", parent: "env/child1/env/", text: "env/child1/env/key1"},
 
           
           //{id: "env/child1/env", parent: "env/child1/", text: "env/child1/env"},
