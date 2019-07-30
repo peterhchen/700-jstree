@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>jsTree test</title>
+  <!-- 2 load the theme CSS file
+  <link rel="stylesheet" href="dist/themes/default/style.min.css" />
+  -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
+</head>
+<body>
+  <!-- 3 setup a container element -->
+  <div id="jstree">
+    </ul>
+  </div>
+  <button>demo button</button>
+
+  <!-- 4 include the jQuery library 
+  <script src="dist/libs/jquery.js"></script>
+  -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
+
+  <!-- 5 include the minified jstree source
+  <script src="dist/jstree.min.js"></script>
+  -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+  <script>
+  $(function () {
+    test_dict = {"DataFlow" : 
+      { "SNAPSHOT_POST1" : 
+        [{ "BAYER_PROC" : [{"MP_R_PROC_PASS": "78.47 MBps"}, {"MP_R_SCALE_PASS": "2.35 MBps"}]},
+         {"SNAPSHOT_POST2":[{"IPE_1_16_PASS":"0.37 MBPs"},{"IPE_1_1_PASS":"73.93MBPs"},{"IPE_1_4_PASS":"5.94 MBPs"}]}]
+      }
+    }
+    // DATA_FLOW
+    //      |-------SNAPSHOT_POST-------BAYER_PROC ------ MP_R_PROC_PASS:78.4MBPs
+    //                              |                   |--MP_R_SCALE_PASS:2.35MBPs
+    //                              |---SNAPSHOT_POST--------- IPE_1_16: 0.37MBPs
+    //                                                  |-------IPE_1_4: 5.94MBPs
+    //                                                  |-------IPE_1_1:73.93MBPs
+    // https://stackoverflow.com/questions/722668/traverse-all-the-nodes-of-a-json-object-tree-with-javascript  
+    jsArr = [];
+    function traverse(o ) {
+      for (i in o) {
+          console.log ('i:', i, 'o[i]:', o[i], "!o[i]:", !o[i], "!!o[i]:", !!o[i]);
+          if (!!o[i] && typeof(o[i])=="object") {
+              console.log('  i:', i, 'o[i]:', o[i])
+              traverse(o[i]);
+          }
+      }
+    }
+    traverse (test_dict);
+
+/*
+    //called with every property and its value
+    function process(key, value) {
+      console.log("process: " + key + ": " + value);
+    }
+
+    function traverse(o, func) {
+      //console.log ('traverse => o:', o, 'func: ', func)
+      for (var i in o) {
+          func.apply(this,[i,o[i]]);  
+          if (o[i] !== null && typeof(o[i])=="object") {
+              //going one step down in the object tree!!
+              //console.log ('go down one more level')
+              traverse(o[i], func);
+          }
+      }
+    }
+
+    //that's all... no magic, no bloated framework
+    traverse(test_dict, process);
+*/
+
+    $('#jstree').jstree({ 'core' : {
+      'data' : [
+         { "id" : "ajson1", "parent" : "#", "text" : "Simple root node" },
+         { "id" : "ajson2", "parent" : "#", "text" : "Root node 2" },
+         { "id" : "ajson3", "parent" : "ajson2", "text" : "Child 1" },
+         { "id" : "ajson4", "parent" : "ajson2", "text" : "Child 2" },
+      ]
+      } });
+  });
+  </script>
+</body>
+</html>
