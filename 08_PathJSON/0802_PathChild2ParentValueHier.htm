@@ -14,17 +14,75 @@
     </ul>
   </div>
   <button>demo button</button>
-
-  <!-- 4 include the jQuery library 
-  <script src="dist/libs/jquery.js"></script>
-  -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
-
-  <!-- 5 include the minified jstree source
-  <script src="dist/jstree.min.js"></script>
-  -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
   <script>
+      function parentGetAllChildData (tree) {
+        maxSlashCnt = 0;   
+        for (var i = 0; i < tree.core.data.length; i++) {
+          var slashCnt = (tree.core.data[i].id.match (/\//g)|| []).length;
+          if (slashCnt > maxSlashCnt) 
+            maxSlashCnt = slashCnt;
+        }
+    
+        pNode = []
+        for (var i = 0; i < tree.core.data.length; i++) {
+          if (tree.core.data[i].id[tree.core.data[i].id.length-1] === '/') {
+            node = {};
+            node.id = tree.core.data[i].id;
+            node.value = tree.core.data[i].value;
+            pNode.push (node);
+          }
+        }
+        
+        maxSlashCnt = 0;   
+        for (var i = 0; i < pNode.length; i++) {
+          var slashCnt = (pNode[i].id.match (/\//g)|| []).length;
+          if (slashCnt > maxSlashCnt) {
+              maxSlashCnt = slashCnt;
+          }
+        }
+    
+        // sort from longest slash.
+        for (var i = 0; i < pNode.length; i++) {
+          var iSlashCnt = (pNode[i].id.match (/\//g)|| []).length;
+          for (var j = 1; j < pNode.length; j++) {
+            var jSlashCnt = (pNode[j].id.match (/\//g)|| []).length;
+            if (iSlashCnt > jSlashCnt) {
+              tmpNode = {};
+              tmpNode = pNode[i];
+              pNode[i] = pNode[j];
+              pNode[j] = tmpNode;
+            }
+          }
+        }
+        for (var i = 0; i < pNode.length; i++) {
+          // find children. Match from the deepest hierachy, i.e., biggest slash count ('/')
+          var childSumValue = 0;
+          var unit = '';
+          for (var j = 0; j < tree.core.data.length; j++) {
+            if (tree.core.data[j].id.substring (0, pNode[i].id.length) === pNode[i].id) {
+              if (tree.core.data[j].hasValue === true) {
+                childSumValue = childSumValue + parseInt (tree.core.data[j].value);
+                unit = tree.core.data[j].unit;
+              }
+            }
+          }
+          // find parent
+          for (var j = 0; j < tree.core.data.length; j++) {
+            if (tree.core.data[j].id === pNode[i].id) {
+              tree.core.data[j].value = childSumValue;
+              tree.core.data[j].unit = unit;
+            }
+          }
+        }
+    
+        for (var i = 0; i < tree.core.data.length; i++) {
+          tree.core.data[i].text = tree.core.data[i].text + ': ' + tree.core.data[i].value + ' ' + tree.core.data[i].unit;
+        }
+        return tree;
+      }
+
   $(function () {
     tree = {
       'core' : {
@@ -62,7 +120,7 @@
     xdata = data
     xdata.splice(xdata.indexOf(picked), 1)
     
-    for(i =0; i<xdata.length; i++) {
+    for(i =0; i < xdata.length; i++) {
         name = xdata[i]
         parent = ""
         if(name.substr(name.length-1,1) == '/') {
@@ -73,120 +131,47 @@
         }
         tree.core.data.push({ "id" : name, "parent" : parent, "text" : name })
     }
-    console.log('tree: ', tree);
-    console.log ('tree.core:', tree.core);
-    console.log ('tree.core.data:', tree.core.data);
-    console.log ('tree.core.data.length:', tree.core.data.length);
+    // Set additional data for testing.
     for (var i = 0; i < tree.core.data.length; i++) {
-      console.log ('1: tree.core.data[i]:', tree.core.data[i]);
       if (tree.core.data[i].id === "env/child1/env/key1") {
         tree.core.data[i].hasValue = true;
-        tree.core.data[i].value = "101";
+        tree.core.data[i].value = " 101 ";
+        tree.core.data[i].unit = "MBps";
       }
       if (tree.core.data[i].id === "env/child1/key1") {
         tree.core.data[i].hasValue = true;
-        tree.core.data[i].value = "11";
+        tree.core.data[i].value = " 11";
+        tree.core.data[i].unit = "MBps";
       }
       if (tree.core.data[i].id === "env/child1/key2") {
         tree.core.data[i].hasValue = true;
-        tree.core.data[i].value = "12";
+        tree.core.data[i].value = " 12";
+        tree.core.data[i].unit = "MBps";
       }
       if (tree.core.data[i].id === "env/child2/key1") {
         tree.core.data[i].hasValue = true;
-        tree.core.data[i].value = "21";
+        tree.core.data[i].value = " 21";
+        tree.core.data[i].unit = "MBps";
       }
       if (tree.core.data[i].id === "env/child2/key2") {
         tree.core.data[i].hasValue = true;
-        tree.core.data[i].value = "22";
+        tree.core.data[i].value = " 22";
+        tree.core.data[i].unit = "MBps";
       }
       if (tree.core.data[i].id === "env/child2/key3") {
         tree.core.data[i].hasValue = true;
-        tree.core.data[i].value = "23";
+        tree.core.data[i].value = " 23";
+        tree.core.data[i].unit = "MBps";
       }
       if (tree.core.data[i].id === "env/child2/key4/key5") {
         tree.core.data[i].hasValue = true;
-        tree.core.data[i].value = "245";
+        tree.core.data[i].value = " 245";
+        tree.core.data[i].unit = "MBps";
       }
     }
-    for (var i = 0; i < tree.core.data.length; i++) {
-      console.log ('2: tree.core.data[i]:', tree.core.data[i]);
-    }
+    jsTree = parentGetAllChildData (tree);
 
-    maxSlashCnt = 0;   
-    for (var i = 0; i < tree.core.data.length; i++) {
-      var slashCnt = (tree.core.data[i].id.match (/\//g)|| []).length;
-      if (slashCnt > maxSlashCnt) 
-        maxSlashCnt = slashCnt;
-    }
-
-    pNode = []
-    for (var i = 0; i < tree.core.data.length; i++) {
-      if (tree.core.data[i].id[tree.core.data[i].id.length-1] === '/') {
-        node = {};
-        node.id = tree.core.data[i].id;
-        node.value = tree.core.data[i].value;
-        pNode.push (node);
-      }
-    }
-
-    for (var i = 0; i < pNode.length; i++) {
-      console.log ('pNode['+ i + ']: ', pNode[i]);
-    }
-    
-    maxSlashCnt = 0;   
-    for (var i = 0; i < pNode.length; i++) {
-      var slashCnt = (pNode[i].id.match (/\//g)|| []).length;
-      if (slashCnt > maxSlashCnt) {
-          maxSlashCnt = slashCnt;
-      }
-    }
-    console.log ('maxSlashCnt: ', maxSlashCnt);
-
-    // sort from longest slash.
-    for (var i = 0; i < pNode.length; i++) {
-      var iSlashCnt = (pNode[i].id.match (/\//g)|| []).length;
-      for (var j = 0; j < pNode.length; j++) {
-        var jSlashCnt = (pNode[j].id.match (/\//g)|| []).length;
-        if (iSlashCnt > jSlashCnt) {
-          tmpNode = {};
-          tmpNode = pNode[i];
-          pNode[i] = pNode[j];
-          pNode[j] = tmpNode;
-        }
-      }
-    }
-
-    for (var i = 0; i < pNode.length; i++) {
-      console.log ('pNode['+ i + ']: ', pNode[i]);
-    }
-
-    for (var i = 0; i < pNode.length; i++) {
-      // find children. Match from the deepest hierachy, i.e., biggest slash count ('/')
-      var childSumValue = 0;
-      for (var j = 0; j < tree.core.data.length; j++) {
-        //console.log ('tree.core.data[j].id.substring (0, pNode[i].id.length):', 
-        //tree.core.data[j].id.substring (0, pNode[i].id.length));
-        //console.log ('pNode[i].id: ', pNode[i].id);
-        if (tree.core.data[j].id.substring (0, pNode[i].id.length) === pNode[i].id) {
-          if (tree.core.data[j].hasValue === true) {
-            childSumValue = childSumValue + parseInt (tree.core.data[j].value);
-          }
-        }
-      }
-      console.log ('childSumValue:', childSumValue)
-      // find parent
-      for (var j = 0; j < tree.core.data.length; j++) {
-        if (tree.core.data[j].id === pNode[i].id) {
-          tree.core.data[j].value = childSumValue;
-        }
-      }
-    }
-
-    for (var i = 0; i < tree.core.data.length; i++) {
-      tree.core.data[i].text = tree.core.data[i].text + ': ' + tree.core.data[i].value + ' MBPs';
-    }
-
-    $('#jstree').jstree(tree);
+    $('#jstree').jstree(jsTree);
   });
   
   </script>
