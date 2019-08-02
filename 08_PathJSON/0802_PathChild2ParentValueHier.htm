@@ -3,21 +3,17 @@
 <head>
   <meta charset="utf-8">
   <title>jsTree test</title>
-  <!-- 2 load the theme CSS file
-  <link rel="stylesheet" href="dist/themes/default/style.min.css" />
-  -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
 </head>
 <body>
-  <!-- 3 setup a container element -->
   <div id="jstree">
     </ul>
   </div>
   <button>demo button</button>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
-  <script>
-      function parentGetAllChildData (tree) {
+<script>
+  function parentGetAllChildData (tree) {
         maxSlashCnt = 0;   
         for (var i = 0; i < tree.core.data.length; i++) {
           var slashCnt = (tree.core.data[i].id.match (/\//g)|| []).length;
@@ -57,7 +53,6 @@
           }
         }
         for (var i = 0; i < pNode.length; i++) {
-          // find children. Match from the deepest hierachy, i.e., biggest slash count ('/')
           var childSumValue = 0;
           var unit = '';
           for (var j = 0; j < tree.core.data.length; j++) {
@@ -68,7 +63,6 @@
               }
             }
           }
-          // find parent
           for (var j = 0; j < tree.core.data.length; j++) {
             if (tree.core.data[j].id === pNode[i].id) {
               tree.core.data[j].value = childSumValue;
@@ -81,17 +75,15 @@
           tree.core.data[i].text = tree.core.data[i].text + ': ' + tree.core.data[i].value + ' ' + tree.core.data[i].unit;
         }
         return tree;
-      }
+  }
 
-  $(function () {
+$(function () {
     tree = {
       'core' : {
           'data' : [
           ]
       } 
     }
-    // Note: The last digit "/" is very important. With "/", it is a folder. Without "/", it is a leaf node.
-    // All the leaf node need the folder to be the parent.
     data = [ 
       "env/child1/env/",
       "env/child1/env/key1",
@@ -172,8 +164,8 @@
     jsTree = parentGetAllChildData (tree);
 
     $('#jstree').jstree(jsTree);
-  });
+});
   
-  </script>
+</script>
 </body>
 </html>
