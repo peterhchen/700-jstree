@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>jsTree test</title>
+  <!-- 2 load the theme CSS file
+  <link rel="stylesheet" href="dist/themes/default/style.min.css" />
+  -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
+</head>
+<body>
+  <!-- 3 setup a container element -->
+  <div id="jstree">
+    </ul>
+  </div>
+  <button>demo button</button>
+
+  <!-- 4 include the jQuery library 
+  <script src="dist/libs/jquery.js"></script>
+  -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
+
+  <!-- 5 include the minified jstree source
+  <script src="dist/jstree.min.js"></script>
+  -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+  <script>
+  $(function () {
+    tree = {
+      'core' : {
+          'data' : [
+          ]
+      } 
+    }
+    // Note: The last digit "/" is very important. With "/", it is a folder. Without "/", it is a leaf node.
+    // All the leaf node need the folder to be the parent.
+    data = [ 
+      "env/child1/env/",
+      "env/child1/env/key1",
+      "env/child1/key1",
+      "env/child1/key2",
+      "env/child1/",
+      "env/child2/key1",
+      "env/child2/key2",
+      "env/child2/key3",
+      "env/child2/key4/",
+      "env/child2/key4/key5",
+      "env/child2/",
+      "env/",
+    ];
+    
+    minlen = -1;
+    picked = "";
+    for(i =0; i<data.length; i++) {
+        if(data[i].length < minlen || minlen == -1) {
+            minlen = data[i].length;
+            picked = data[i];
+        }
+    }
+    
+    tree.core.data.push({ "id" : picked, "parent" : "#", "text" : picked })
+    xdata = data
+    xdata.splice(xdata.indexOf(picked), 1)
+    
+    for(i =0; i<xdata.length; i++) {
+        name = xdata[i]
+        parent = ""
+        if(name.substr(name.length-1,1) == '/') {
+            xname = name.substr(0,name.length-1);
+            parent = xname.substr(0,xname.lastIndexOf("/")+1)
+        } else {
+            parent = name.substr(0,name.lastIndexOf("/")+1)
+        }
+        tree.core.data.push({ "id" : name, "parent" : parent, "text" : name })
+    }
+    console.log('tree: ', tree);
+    console.log ('tree.core:', tree.core);
+    console.log ('tree.core.data:', tree.core.data);
+    console.log ('tree.core.data.length:', tree.core.data.length);
+    for (var i = 0; i < tree.core.data.length; i++) {
+      console.log ('1: tree.core.data[i]:', tree.core.data[i]);
+      if (tree.core.data[i].id === "env/child1/env/key1") {
+        tree.core.data[i].hasValue = true;
+        tree.core.data[i].value = "101";
+      }
+      if (tree.core.data[i].id === "env/child1/key1") {
+        tree.core.data[i].hasValue = true;
+        tree.core.data[i].value = "11";
+      }
+      if (tree.core.data[i].id === "env/child1/key2") {
+        tree.core.data[i].hasValue = true;
+        tree.core.data[i].value = "12";
+      }
+      if (tree.core.data[i].id === "env/child2/key1") {
+        tree.core.data[i].hasValue = true;
+        tree.core.data[i].value = "21";
+      }
+      if (tree.core.data[i].id === "env/child2/key2") {
+        tree.core.data[i].hasValue = true;
+        tree.core.data[i].value = "22";
+      }
+      if (tree.core.data[i].id === "env/child2/key3") {
+        tree.core.data[i].hasValue = true;
+        tree.core.data[i].value = "23";
+      }
+      if (tree.core.data[i].id === "env/child2/key4/key5") {
+        tree.core.data[i].hasValue = true;
+        tree.core.data[i].value = "245";
+      }
+    }
+    for (var i = 0; i < tree.core.data.length; i++) {
+      console.log ('2: tree.core.data[i]:', tree.core.data[i]);
+    }
+
+    maxSlashCnt = 0;   
+    for (var i = 0; i < tree.core.data.length; i++) {
+      var slashCnt = (tree.core.data[i].id.match (/\//g)|| []).length;
+      if (slashCnt > maxSlashCnt) 
+        maxSlashCnt = slashCnt;
+    }
+
+    pNode = []
+    for (var i = 0; i < tree.core.data.length; i++) {
+      if (tree.core.data[i].id[tree.core.data[i].id.length-1] === '/') {
+        node = {};
+        node.id = tree.core.data[i].id;
+        node.value = tree.core.data[i].value;
+        pNode.push (node);
+      }
+    }
+
+    for (var i = 0; i < pNode.length; i++) {
+      console.log ('pNode['+ i + ']: ', pNode[i]);
+    }
+    
+    maxSlashCnt = 0;   
+    for (var i = 0; i < pNode.length; i++) {
+      var slashCnt = (pNode[i].id.match (/\//g)|| []).length;
+      if (slashCnt > maxSlashCnt) {
+          maxSlashCnt = slashCnt;
+      }
+    }
+    console.log ('maxSlashCnt: ', maxSlashCnt);
+
+    // sort from longest slash.
+    for (var i = 0; i < pNode.length; i++) {
+      var iSlashCnt = (pNode[i].id.match (/\//g)|| []).length;
+      for (var j = 0; j < pNode.length; j++) {
+        var jSlashCnt = (pNode[j].id.match (/\//g)|| []).length;
+        if (iSlashCnt > jSlashCnt) {
+          tmpNode = {};
+          tmpNode = pNode[i];
+          pNode[i] = pNode[j];
+          pNode[j] = tmpNode;
+        }
+      }
+    }
+
+    for (var i = 0; i < pNode.length; i++) {
+      console.log ('pNode['+ i + ']: ', pNode[i]);
+    }
+
+    for (var i = 0; i < pNode.length; i++) {
+      // find children. Match from the deepest hierachy, i.e., biggest slash count ('/')
+      var childSumValue = 0;
+      for (var j = 0; j < tree.core.data.length; j++) {
+        //console.log ('tree.core.data[j].id.substring (0, pNode[i].id.length):', 
+        //tree.core.data[j].id.substring (0, pNode[i].id.length));
+        //console.log ('pNode[i].id: ', pNode[i].id);
+        if (tree.core.data[j].id.substring (0, pNode[i].id.length) === pNode[i].id) {
+          if (tree.core.data[j].hasValue === true) {
+            childSumValue = childSumValue + parseInt (tree.core.data[j].value);
+          }
+        }
+      }
+      console.log ('childSumValue:', childSumValue)
+      // find parent
+      for (var j = 0; j < tree.core.data.length; j++) {
+        if (tree.core.data[j].id === pNode[i].id) {
+          tree.core.data[j].value = childSumValue;
+        }
+      }
+    }
+
+    for (var i = 0; i < tree.core.data.length; i++) {
+      tree.core.data[i].text = tree.core.data[i].text + ': ' + tree.core.data[i].value + ' MBPs';
+    }
+
+    $('#jstree').jstree(tree);
+  });
+  
+  </script>
+</body>
+</html>
